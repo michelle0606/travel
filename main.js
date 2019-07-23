@@ -927,7 +927,6 @@ function displayResults(data) {
 
 function showInfo(id) {
   const modalBody = document.querySelector('.modal-body')
-
   const data = info.filter(x => x.Id == id)
   modalBody.innerHTML = `
                 <div class="row">
@@ -982,10 +981,19 @@ searchBox.addEventListener('keyup', e => {
   displayResults(results)
 })
 
-const home = document.querySelector('.choose')
+const home = document.querySelector('.home')
+const scheduled = document.querySelector('.choose')
 
 home.addEventListener('click', () => {
+  home.firstElementChild.classList.add('active')
+  scheduled.firstElementChild.classList.remove('active')
   displayData(info)
 })
 
 displayData(info)
+
+scheduled.addEventListener('click', () => {
+  home.firstElementChild.classList.remove('active')
+  scheduled.firstElementChild.classList.add('active')
+  displayData(schedule)
+})
