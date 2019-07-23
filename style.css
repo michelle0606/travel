@@ -1,0 +1,28 @@
+.add {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border: 1px solid black;
+  position: absolute;
+  border-radius: 50%;
+  top: -22px;
+  right: 20px;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.add:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.card-img-top:hover {
+  filter: brightness(1) !important;
+}
+
+.scheduled {
+  color: #fff;
+  background-color: lightblue;
+}
