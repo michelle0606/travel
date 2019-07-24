@@ -18,6 +18,27 @@
   cursor: pointer;
 }
 
+.delete {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #f1f1f1;
+  position: absolute;
+  border-radius: 50%;
+  bottom: 5px;
+  right: 5px;
+  background-color: lightcoral;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.delete:hover {
+  background-color: #a3231f;
+  cursor: pointer;
+}
+
 .card-img-top:hover {
   filter: brightness(1) !important;
 }
@@ -25,4 +46,20 @@
 .scheduled {
   color: #fff;
   background-color: lightblue;
+}
+[draggable='true'] {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+ul.moveable {
+  padding: 0;
+}
+ul > div {
+  cursor: move;
+}
+ul > div:hover {
+  background-color: #eee;
 }

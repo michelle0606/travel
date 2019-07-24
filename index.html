@@ -12,11 +12,6 @@
     />
     <link rel="stylesheet" href="style.css" />
     <script src="https://kit.fontawesome.com/2e90554d29.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-      crossorigin="anonymous"
-    ></script>
     <title>選擇景點</title>
   </head>
   <body>
@@ -112,5 +107,53 @@
     ></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="main.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function order() {
+        let items = document.querySelectorAll('#items-list > div')
+        items.forEach(item => {
+          $(item).prop('draggable', true)
+          item.addEventListener('dragstart', dragStart)
+          item.addEventListener('drop', dropped)
+          item.addEventListener('dragenter', cancelDefault)
+          item.addEventListener('dragover', cancelDefault)
+        })
+
+        function dragStart(e) {
+          var index = $(e.target).index()
+          e.dataTransfer.setData('text/plain', index)
+        }
+
+        function dropped(e) {
+          cancelDefault(e)
+
+          let oldIndex = e.dataTransfer.getData('text/plain')
+          let target = $(e.target)
+          let newIndex = target.index()
+
+          let dropped = $(this)
+            .parent()
+            .children()
+            .eq(oldIndex)
+            .remove()
+
+          if (newIndex < oldIndex) {
+            this.before(dropped.get(0))
+          } else {
+            this.after(dropped.get(0))
+          }
+        }
+
+        function cancelDefault(e) {
+          e.preventDefault()
+          e.stopPropagation()
+          return false
+        }
+      }
+    </script>
   </body>
 </html>

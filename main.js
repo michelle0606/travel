@@ -869,9 +869,13 @@ const restroom = [
     最後更新時間: '20181002'
   }
 ]
+const japanData = []
 const schedule = JSON.parse(localStorage.getItem('schedule')) || []
 
+// 主頁面資料顯示
 function displayData(data) {
+  dataPanel.classList.add('row')
+  dataPanel.classList.remove('colume')
   dataPanel.innerHTML = ''
   data.forEach(function(item, index) {
     dataPanel.innerHTML += `
@@ -901,7 +905,10 @@ function displayData(data) {
   })
 }
 
+// 無障礙廁所查詢結果顯示
 function displayResults(data) {
+  dataPanel.classList.add('row')
+  dataPanel.classList.remove('colume')
   dataPanel.innerHTML = ''
   data.forEach(function(item, index) {
     dataPanel.innerHTML += `
@@ -925,6 +932,7 @@ function displayResults(data) {
   })
 }
 
+// 顯示個別卡片詳細資料
 function showInfo(id) {
   const modalBody = document.querySelector('.modal-body')
   const data = info.filter(x => x.Id == id)
@@ -944,6 +952,7 @@ function showInfo(id) {
             `
 }
 
+// 新增景點
 function addAttraction(detail) {
   const id = detail.dataset.id
 
@@ -962,27 +971,80 @@ function addAttraction(detail) {
   localStorage.setItem('schedule', JSON.stringify(list))
 }
 
+// 刪除景點
+function deleteAttraction(data) {
+  const index = schedule.findIndex(item => item.Id == data.dataset.id)
+  if (index === -1) return
+  schedule.splice(index, 1)
+  localStorage.setItem('schedule', JSON.stringify(schedule))
+  displaySchedule(schedule)
+}
+
+// 顯示已選行程
+function displaySchedule(data) {
+  dataPanel.classList.remove('row')
+  dataPanel.classList.add('colume')
+  dataPanel.innerHTML = `<h5>拖曳可以更改排序</h5>
+  <br/>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.442496331208!2d120.27510181486922!3d23.044233484942097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e7098b7901b91%3A0xccbec3ff0c05e8cd!2z5Y-w54Gj6YeR5bGs5Ym15oSP6aSoKOW_l-mLvOmHkeWxrCk!5e0!3m2!1szh-TW!2stw!4v1563957042078!5m2!1szh-TW!2stw" width="800" height="500" frameborder="0" style="border:0; margin-left: 320px;
+    position: absolute;" allowfullscreen></iframe>
+  <ul id="items-list" class="moveable">
+  </ul>`
+  const itemsList = document.getElementById('items-list')
+  data.forEach(function(item, index) {
+    itemsList.innerHTML += `
+          <div class="item" style="width:300px; position: relative" data-id="${
+            item.Id
+          }">
+            <div class="delete">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="card mb-2" data-id="${
+              item.Id
+            }" data-toggle="modal" data-target="#show-movie-modal">
+              
+              <div class="card-body justify-content-between pt-4" style="position: relative;">
+           
+                <h6 class="card-title" style="font-family:monospace; font-size:22px;">${
+                  item.Name
+                }</h6>
+                <div>
+                  <small>${item.Add}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+  })
+  order()
+}
+
+// 全部監聽器
+const home = document.querySelector('.home')
+const scheduled = document.querySelector('.choose')
+const searchBox = document.querySelector('form.form-inline')
+
 dataPanel.addEventListener('click', e => {
   if (e.target.matches('.add') || e.target.matches('.fa-plus')) {
     addAttraction(e.target.closest('.card'))
+    e.stopPropagation()
+  } else if (e.target.matches('.delete') || e.target.matches('.fa-times')) {
+    deleteAttraction(e.target.closest('.item'))
     e.stopPropagation()
   } else {
     showInfo(e.target.dataset.id)
   }
 })
 
-const searchBox = document.querySelector('form.form-inline')
-
 searchBox.addEventListener('keyup', e => {
   let results = []
   let input = document.querySelector('input[type=search]').value
   results = restroom.filter(search => search.鄉鎮市區.match(input))
-
+  if (input == '日本') {
+    displayResults(japanData)
+  }
   displayResults(results)
 })
-
-const home = document.querySelector('.home')
-const scheduled = document.querySelector('.choose')
 
 home.addEventListener('click', () => {
   home.firstElementChild.classList.add('active')
@@ -990,10 +1052,10 @@ home.addEventListener('click', () => {
   displayData(info)
 })
 
-displayData(info)
-
 scheduled.addEventListener('click', () => {
   home.firstElementChild.classList.remove('active')
   scheduled.firstElementChild.classList.add('active')
-  displayData(schedule)
+  displaySchedule(schedule)
 })
+
+displayData(info)
